@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Asistencia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md">
+        <h1 class="text-2xl font-bold text-gray-800 mb-2 text-center">Registro de Asistencia</h1>
+        <p class="text-gray-500 text-center mb-6 text-sm">Se capturará tu ubicación y tiempo real</p>
+        
+        <div class="space-y-4">
+            <input type="text" id="nombre" placeholder="Nombre completo" 
+                class="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+
+            <button onclick="enviarRegistro()" id="btnEnvio"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95">
+                MARCAR ENTRADA
+            </button>
+        </div>
+
+        <div id="mensaje" class="mt-6 text-center text-sm font-medium hidden"></div>
+    </div>
+
+    <script>
+        async function enviarRegistro() {
+            const nombre = document.getElementById('nombre').value;
+            const msj = document.getElementById('mensaje');
+            const btn = document.getElementById('btnEnvio');
+            
+            if (!nombre) return alert("Por favor, escribe tu nombre");
+
+            // Configuración visual de carga
+            msj.classList.remove('hidden');
+            msj.className = "mt-6 text-center text-sm font-medium text-blue-600 animate-pulse";
+            msj.innerText = "Obteniendo GPS...";
+            btn.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                // --- PUNTO CRÍTICO ---
+                const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbziqBQSMhxsEvMYKGOd4VmHJesywD4hlK7gMkcVZLZMHGtcPoNs6TAJtkh5zkdxczwA/exec";
+                
+                const datos = {
+                    nombre: nombre,
+                    lat: pos.coords.latitude,
+                    long: pos.coords.longitude
+                };
+
+                msj.innerText = "Enviando datos y correo...";
+
+                try {
+                    await fetch(URL_SCRIPT, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: JSON.stringify(datos)
+                    });
+                    
+                    msj.className = "mt-6 text-center text-sm font-medium text-green-600";
+                    msj.innerText = "✅ ¡Registro y correo enviados con éxito!";
+                    document.getElementById('nombre').value = "";
+                } catch (error) {
+                    msj.className = "mt-6 text-center text-sm font-medium text-red-500";
+                    msj.innerText = "❌ Error al enviar. Intenta de nuevo.";
+                } finally {
+                    btn.disabled = false;
+                }
+
+            }, (err) => {
+                msj.className = "mt-6 text-center text-sm font-medium text-red-500";
+                msj.innerText = "❌ Error: Debes activar el GPS para marcar asistencia.";
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
