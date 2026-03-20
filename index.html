@@ -5,51 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alfa Security - Registro de Custodia</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4 font-sans">
-    <div class="bg-white p-6 rounded-3xl shadow-2xl w-full max-w-md border-t-8 border-yellow-400">
+<body class="bg-slate-900 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-6 rounded-[2rem] shadow-2xl w-full max-w-md border-t-[10px] border-yellow-400">
         
         <div class="flex justify-center mb-6">
-            <img src="https://raw.githubusercontent.com/rafazamora45-beluga/localizacion-escolta/main/LOGO_ALFA-02.png" alt="Alfa Security Logo" class="w-64 h-auto">
+            <img src="LOGO_ALFA-02.png" alt="Alfa Security Logo" class="w-64 h-auto">
         </div>
 
-        <h1 class="text-xl font-bold text-gray-800 mb-1 text-center uppercase tracking-tight">Registro Operativo</h1>
-        <p class="text-gray-500 text-center mb-6 text-xs uppercase">Reporte de Posición y Estado</p>
+        <h1 class="text-2xl font-black text-gray-900 mb-1 text-center uppercase tracking-tighter">Registro Operativo</h1>
+        <p class="text-gray-400 text-center mb-8 text-[10px] font-bold uppercase tracking-widest">Monitoreo Satelital GPS - El Salvador</p>
         
-        <div class="space-y-4">
+        <div class="space-y-5">
             <div>
-                <label class="text-[10px] font-bold text-gray-400 uppercase ml-2">Nombre del Custodio</label>
-                <input type="text" id="nombre" placeholder="Ej: Juan Pérez" 
-                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none transition-all">
+                <label class="text-[11px] font-black text-gray-500 uppercase ml-1">Custodio asignado</label>
+                <input type="text" id="nombre" placeholder="Nombre completo" 
+                    class="w-full px-4 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-yellow-400 focus:bg-white outline-none transition-all text-gray-800 font-medium">
             </div>
 
             <div>
-                <label class="text-[10px] font-bold text-gray-400 uppercase ml-2">Nombre de la Custodia / Cliente</label>
-                <input type="text" id="nombreCustodia" placeholder="Ej: Convoy Grupo Tical" 
-                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none transition-all">
+                <label class="text-[11px] font-black text-gray-500 uppercase ml-1">Nombre de la Custodia / Cliente</label>
+                <input type="text" id="nombreCustodia" placeholder="Ej: Convoy Tical / Ancalmo" 
+                    class="w-full px-4 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-yellow-400 focus:bg-white outline-none transition-all text-gray-800 font-medium">
             </div>
 
             <div>
-                <label class="text-[10px] font-bold text-gray-400 uppercase ml-2">Estado del Servicio</label>
-                <select id="estado" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none transition-all appearance-none">
-                    <option value="En camino">En camino</option>
-                    <option value="Finalizado">Finalizado</option>
-                </select>
+                <label class="text-[11px] font-black text-gray-500 uppercase ml-1">Estado del servicio</label>
+                <div class="relative">
+                    <select id="estado" class="w-full px-4 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-yellow-400 focus:bg-white outline-none transition-all text-gray-800 font-bold appearance-none">
+                        <option value="En camino">🟡 EN CAMINO</option>
+                        <option value="Finalizado">🟢 FINALIZADO</option>
+                    </select>
+                </div>
             </div>
 
             <div>
-                <label class="text-[10px] font-bold text-gray-400 uppercase ml-2">Acción del Servicio</label>
-                <textarea id="comentarios" placeholder="Describa la novedad o acción..." rows="3"
-                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none transition-all"></textarea>
+                <label class="text-[11px] font-black text-gray-500 uppercase ml-1">Acción del servicio (Novedades)</label>
+                <textarea id="comentarios" placeholder="Describa brevemente la situación actual..." rows="3"
+                    class="w-full px-4 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-yellow-400 focus:bg-white outline-none transition-all text-gray-800 font-medium"></textarea>
             </div>
 
             <button onclick="enviarRegistro()" id="btnEnvio"
-                class="w-full bg-black hover:bg-gray-800 text-yellow-400 font-black py-4 rounded-xl shadow-lg transition-all active:scale-95 uppercase tracking-widest text-sm">
-                Enviar Reporte GPS
+                class="w-full bg-black hover:bg-zinc-800 text-yellow-400 font-black py-5 rounded-2xl shadow-xl transition-all active:scale-95 uppercase tracking-widest text-sm mt-4">
+                Enviar Reporte en Vivo
             </button>
         </div>
 
-        <div id="mensaje" class="mt-6 text-center text-sm font-bold hidden"></div>
+        <div id="mensaje" class="mt-8 text-center text-sm font-black hidden"></div>
     </div>
 
     <script>
@@ -61,15 +67,18 @@
             const msj = document.getElementById('mensaje');
             const btn = document.getElementById('btnEnvio');
             
-            if (!nombre || !nombreCustodia) return alert("Por favor, complete los campos obligatorios.");
+            if (!nombre || !nombreCustodia) return alert("Error: El nombre del custodio y la custodia son obligatorios.");
 
+            // UI de carga
             msj.classList.remove('hidden');
-            msj.className = "mt-6 text-center text-sm font-medium text-blue-600 animate-pulse";
-            msj.innerText = "CAPTURANDO COORDENADAS GPS...";
+            msj.className = "mt-8 text-center text-xs font-black text-blue-600 animate-pulse uppercase tracking-widest";
+            msj.innerText = "🛰️ Localizando satélite GPS...";
             btn.disabled = true;
 
             navigator.geolocation.getCurrentPosition(async (pos) => {
-                const URL_SCRIPT = "https://script.google.com/macros/s/AKfycby2Ex-J_Or6EiLz3EC-y471iiYOMBjr96RDMt917d02h7yNU_dostxVjT_zPZvkILc/exec";
+                
+                // --- PEGA TU URL DE GOOGLE SCRIPT AQUÍ ABAJO ---
+                const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwUZKpQySyyXw0ksYyqF7oN06-IdxkJJQ3CuVBAHijrO-nfek5xnLNIsV2hO_l4mPEC/exec";
                 
                 const datos = {
                     nombre: nombre,
@@ -80,7 +89,7 @@
                     long: pos.coords.longitude
                 };
 
-                msj.innerText = "SINCRONIZANDO CON ALFA SECURITY...";
+                msj.innerText = "🚀 Sincronizando con Base Alfa...";
 
                 try {
                     await fetch(URL_SCRIPT, {
@@ -89,22 +98,23 @@
                         body: JSON.stringify(datos)
                     });
                     
-                    msj.className = "mt-6 text-center text-sm font-bold text-green-600 border-2 border-green-600 p-2 rounded-lg";
-                    msj.innerText = "✅ REPORTE ENVIADO CON ÉXITO";
-                    document.getElementById('nombreCustodia').value = "";
+                    msj.className = "mt-8 text-center text-sm font-black text-green-600 border-2 border-green-600 p-3 rounded-2xl uppercase shadow-inner";
+                    msj.innerText = "✅ REPORTE TRANSMITIDO";
+                    
+                    // Limpiar campos específicos después de enviar
                     document.getElementById('comentarios').value = "";
                 } catch (error) {
-                    msj.className = "mt-6 text-center text-sm font-bold text-red-500";
-                    msj.innerText = "❌ ERROR DE RED. INTENTE DE NUEVO.";
+                    msj.className = "mt-8 text-center text-sm font-black text-red-500";
+                    msj.innerText = "❌ ERROR DE SEÑAL. INTENTE DE NUEVO.";
                 } finally {
                     btn.disabled = false;
                 }
 
             }, (err) => {
-                msj.className = "mt-6 text-center text-sm font-bold text-red-500";
-                msj.innerText = "❌ ERROR: GPS DESACTIVADO.";
+                msj.className = "mt-8 text-center text-sm font-black text-red-500 border-2 border-red-500 p-3 rounded-2xl";
+                msj.innerText = "⚠️ ERROR: GPS APAGADO O SIN PERMISO.";
                 btn.disabled = false;
-            });
+            }, { enableHighAccuracy: true });
         }
     </script>
 </body>
